@@ -12,7 +12,7 @@ class Case :
         y = self.index[1]
         count = 0
         for c in [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]] :
-            if not c.is_bombe :
+            if c.is_bombe :
                 count += 1
         self.num = count
         if count > 0 :
