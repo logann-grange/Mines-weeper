@@ -12,20 +12,20 @@ class Tableau:
             for i in range(9) :
                 self.tab.append([])
                 for j in range(9) :
-                    self.tab[i].append(Case((i,j), False, 0))
+                    self.tab[i].append(Case((i,j), False))
         elif self.difficulté == "Moyen" :
             for i in range(16) :
                 self.tab.append([])
                 for j in range(16) :
-                    self.tab[i].append(Case((i,j), False, 0))
+                    self.tab[i].append(Case((i,j), False))
         else :
             for i in range(16) :
                 self.tab.append([])
                 for j in range(30) :
-                    self.tab[i].append(Case((i,j), False, 0))
+                    self.tab[i].append(Case((i,j), False))
                     
     
-    def generate_bombes(self):
+    def generate_bombes(self, first_click=None):
         if self.difficulté == "Facile":
             max_bombs = 10
             min_bombs = 5
@@ -34,17 +34,22 @@ class Tableau:
             min_bombs = 10
 
         elif self.difficulté == "Difficile":
-            max_bombs = 30
-            min_bombs = 20
+            max_bombs = 99
+            min_bombs = 70
         else:
             raise ValueError("Invalid difficulty level. Choose 'easy', 'medium', or 'hard'.")
 
         num_bombs = random.randint(min_bombs, max_bombs)
-        for _ in range(num_bombs):
-            x = random.randint(0, len(self.tab)-1)
-            y = random.randint(0, len(self.tab[0])-1)
-            if not self.tab[x][y].is_bombe:
-                self.tab[x][y].is_bombe = True
+        positions = []
+        for x in range(len(self.tab)):
+            for y in range(len(self.tab[0])):
+                if first_click is not None and (x, y) == first_click:
+                    continue
+                positions.append((x, y))
+
+        random.shuffle(positions)
+        for x, y in positions[:num_bombs]:
+            self.tab[x][y].is_bombe = True
             
         
 
