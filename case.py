@@ -1,9 +1,9 @@
 class Case :
 
-    def __init__(self, index, is_bombe, discover, marker):
+    def __init__(self, index, discover, marker):
         self.index = index
         self.discover = discover
-        self.is_bombe = is_bombe
+        self.is_bombe = None
         self.marker = marker # 0=empty , 1=flag, 2=? 
         self.num = None
 
