@@ -36,8 +36,6 @@ class Tableau:
         elif self.difficulté == "Difficile":
             max_bombs = 99
             min_bombs = 70
-        else:
-            raise ValueError("Invalid difficulty level. Choose 'easy', 'medium', or 'hard'.")
 
         num_bombs = random.randint(min_bombs, max_bombs)
         positions = []
@@ -50,6 +48,21 @@ class Tableau:
         random.shuffle(positions)
         for x, y in positions[:num_bombs]:
             self.tab[x][y].is_bombe = True
+            
+    def reset_tableau(self):
+        for row in self.tab:
+            for case in row:
+                case.is_bombe = None
+                case.discover = False
+                case.marker = 0
+                case.num = None
+    
+    def is_victory(self):
+        for row in self.tab:
+            for case in row:
+                if not case.is_bombe and not case.discover:
+                    return False
+        return True                    
             
         
 

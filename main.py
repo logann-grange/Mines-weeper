@@ -1,74 +1,32 @@
-from affichage_tableau import AffichageTableau
+import tkinter as tk
+from JeuDemineur import JeuDemineur
+from choix_difficulté import ChoixDifficulte
 
 
-class JeuDemineur:
-	def __init__(self, difficulte):
-		self.vue = AffichageTableau(difficulte)
-		self.tableau = self.vue.tableau
-		self.bombes_generees = False
-		self.game_is_over = False
+def calculate_window_size(difficulte):
+	"""Calcule la taille optimale de la fenêtre selon la difficulté"""
+	# Tailles fixes générales selon la difficulté
+	if difficulte == "Facile":
+		return "550x550"
+	elif difficulte == "Moyen":
+		return "650x650"
+	else:  # Difficile
+		return "940x380"
 
-		self.vue.set_click_handlers(
-			on_left_click=self.click_gauche,
-			on_right_click=self.click_droit,
-		)
 
-	def check_win(self):
-		for row in self.tableau.tab:
-			for case in row:
-				if not case.is_bombe and not case.discover:
-					return False
-		return True
-
-	def finir_partie(self, is_win):
-		self.game_is_over = True
-		if not is_win:
-			self.vue.afficher_defaite(self.tableau.tab)
-			self.vue.set_title_state("Perdu")
-		else:
-			self.vue.set_title_state("Gagne")
-		self.vue.disable_all_buttons()
-
-	def click_gauche(self, i, j):
-		if self.game_is_over:
-			return
-
-		if not self.bombes_generees:
-			self.tableau.generate_bombes(first_click=(i, j))
-			self.bombes_generees = True
-
-		case = self.tableau.tab[i][j]
-		if case.discover or case.marker == 1:
-			return
-
-		if case.is_bombe:
-			self.finir_partie(False)
-			return
-
-		if case.vérif_num(self.tableau.tab):
-			case.discover = True
-		else:
-			case.discovering(self.tableau.tab)
-		self.vue.update_grid(self.tableau.tab)
-
-		if self.check_win():
-			self.finir_partie(True)
-
-	def click_droit(self, i, j):
-		if self.game_is_over:
-			return
-
-		case = self.tableau.tab[i][j]
-		if case.discover:
-			return
-
-		case.right_clic_on()
-		self.vue.update_grid(self.tableau.tab)
-
-	def run(self):
-		self.vue.run()
+def lancer_jeu(menu_frame, difficulte, root):
+	"""Lance le jeu quand la difficulté est choisie"""
+	menu_frame.destroy()
+	geometry = calculate_window_size(difficulte)
+	root.geometry(geometry)
+	root.resizable(False, False)
+	jeu = JeuDemineur(difficulte, root=root)
 
 
 if __name__ == "__main__":
-	jeu = JeuDemineur("Difficile")
-	jeu.run()
+	root = tk.Tk()
+	root.title("Démineur")
+	root.geometry("400x300")
+	root.resizable(False, False)
+	menu = ChoixDifficulte(root, on_difficulte_chosen=lambda d: lancer_jeu(menu, d, root))
+	root.mainloop()

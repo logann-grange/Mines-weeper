@@ -1,13 +1,14 @@
 import tkinter as tk
 
-class ChoixDifficulté(tk.Frame):
-    def __init__ (self,master):
-        super().__init__(master)
+class ChoixDifficulte(tk.Frame):
+    def __init__ (self, master, on_difficulte_chosen=None):
+        super().__init__(master, bg="#f0f0f0")
         self.master = master
+        self.on_difficulte_chosen = on_difficulte_chosen
         self.master.title("Choix de la difficulté")
         self.master.geometry("400x300")
         self.master.resizable(False, False)
-        self.pack()
+        self.place(relx=0.5, rely=0.5, anchor="center")
         self.create_widgets()
     
     def create_widgets(self):
@@ -21,4 +22,17 @@ class ChoixDifficulté(tk.Frame):
         self.button_moyen.pack(pady=10)
 
         self.button_difficile = tk.Button(self, text="Difficile", command=self.difficile)
-        self.button_difficile.pack(pady=10)    
+        self.button_difficile.pack(pady=10)
+
+    def facile(self):
+        if self.on_difficulte_chosen:
+            self.on_difficulte_chosen("Facile")
+
+    def moyen(self):
+        if self.on_difficulte_chosen:
+            self.on_difficulte_chosen("Moyen")
+
+    def difficile(self):
+        if self.on_difficulte_chosen:
+            self.on_difficulte_chosen("Difficile")    
+        
