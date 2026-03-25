@@ -4,14 +4,17 @@ class Case :
         self.index = index
         self.discover = discover
         self.is_bombe = None
-        self.marker = 0 # 0=empty , 1=flag, 2=? 
+        self.marker = 0 # 0=empty , 1=flag, 2=?
         self.num = None
 
-    def vérif_num(self, tab) :
+    # Vérifie le nombre de mines adjacentes à une case :
+    def verif_num(self, tab) :
         x = self.index[0]
         y = self.index[1]
         count = 0
-        for c in [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]] :
+        list_case = self.gener_case_adj(tab)
+        #list_case = [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]]
+        for c in  list_case:
             if c.is_bombe :
                 count += 1
         self.num = count
@@ -20,18 +23,44 @@ class Case :
         else :
             return False
     
+    # Changement des marqueur
     def right_clic_on(self) :
         self.marker += 1
         self.marker %= 3
 
+    # Gère la découverte des cases :
     def discovering(self, tab) :
-        x = self.index[0]
-        y = self.index[1]
         if self.is_bombe :
             return False
         else :
             self.discover = True
-            list_case = [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]]
+            x = self.index[0]
+            y = self.index[1]
+            # definition des cases adjacentes :
+            list_case = self.gener_case_adj(tab)
+            #list_case = [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]]
             for c in list_case :
-                if not c.verif_num(tab) :
+                if not c.verif_num(tab) and not c.discover :
                     c.discovering(tab)
+                c.discover = True
+
+    # génération de la liste de cases adjacents
+    def gener_case_adj(self, tab) :
+        list_case = []
+        if self.index[1]-1 >= 0 :
+            list_case.append(tab[self.index[0]][self.index[1]-1])
+        if self.index[1]+1 < len(tab[0]) :
+            list_case.append(tab[self.index[0]][self.index[1]+1])
+        if self.index[0]-1 >= 0 :
+            list_case.append(tab[self.index[0]-1][self.index[1]])
+            if self.index[1]-1 >= 0 :
+                list_case.append(tab[self.index[0]-1][self.index[1]-1])
+            if self.index[1]+1 < len(tab[0]) :
+                list_case.append(tab[self.index[0]-1][self.index[1]+1])
+        if self.index[0]+1 < len(tab) :
+            list_case.append(tab[self.index[0]+1][self.index[1]])
+            if self.index[1]-1 >= 0 :
+                list_case.append(tab[self.index[0]+1][self.index[1]-1])
+            if self.index[1]+1 < len(tab[0]) :
+                list_case.append(tab[self.index[0]+1][self.index[1]+1])
+        return list_case
