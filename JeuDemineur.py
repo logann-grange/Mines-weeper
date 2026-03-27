@@ -1,5 +1,6 @@
 from affichage_tableau import AffichageTableau
 import menu_retry
+from choix_difficulté import ChoixDifficulte
 
 class JeuDemineur:
 	def __init__(self, difficulte, root=None):
@@ -9,11 +10,43 @@ class JeuDemineur:
 		self.bombes_generees = False
 		self.game_is_over = False
 		self.retry_overlay = None
+		self.timer_started = False
 
 		self.vue.set_click_handlers(
 			on_left_click=self.click_gauche,
 			on_right_click=self.click_droit,
 		)
+		self.vue.set_menu_handler(self.retour_au_menu)
+
+	def retour_au_menu(self):
+		if self.retry_overlay is not None:
+			self.retry_overlay.destroy()
+			self.retry_overlay = None
+
+		if self.timer_started:
+			self.vue.stop_timer()
+			self.timer_started = False
+
+		for widget in self.vue.root.winfo_children():
+			widget.destroy()
+
+		self.vue.root.geometry("400x300")
+		self.vue.root.title("Démineur")
+		self.vue.root.resizable(False, False)
+
+		ChoixDifficulte(
+			self.vue.root,
+			on_difficulte_chosen=lambda d: self.relancer_depuis_menu(d),
+		)
+
+	def relancer_depuis_menu(self, difficulte):
+		for widget in self.vue.root.winfo_children():
+			widget.destroy()
+
+		from main import calculate_window_size
+		geometry = calculate_window_size(difficulte)
+		self.vue.root.geometry(geometry)
+		JeuDemineur(difficulte, root=self.vue.root)
 
 	def check_win(self):
 		for row in self.tableau.tab:
@@ -24,14 +57,15 @@ class JeuDemineur:
 
 	def finir_partie(self, is_win):
 		self.game_is_over = True
+		temps_final = self.vue.stop_timer() if self.timer_started else 0
 		if not is_win:
 			self.vue.afficher_defaite(self.tableau.tab)
 			self.vue.set_title_state("Perdu")
-			message = "Perdu. Voulez-vous rejouer ?"
+			message = f"Perdu en {temps_final:.2f} s. Voulez-vous rejouer ?"
 		else:
+			self.vue.disable_all_buttons()
 			self.vue.set_title_state("Gagne")
-			message = "Gagne. Voulez-vous rejouer ?"
-		self.vue.disable_all_buttons()
+			message = f"Gagne en {temps_final:.2f} s. Voulez-vous rejouer ?"
 		self.retry_overlay = menu_retry.MenuRetry(
 			self.vue.root,
 			on_retry=self.reinitialiser_partie,
@@ -45,10 +79,18 @@ class JeuDemineur:
 		self.bombes_generees = False
 		self.game_is_over = False
 		self.retry_overlay = None
+		self.timer_started = False
+
+	def demarrer_timer_si_necessaire(self):
+		if not self.timer_started:
+			self.vue.start_timer()
+			self.timer_started = True
 
 	def click_gauche(self, i, j):
 		if self.game_is_over:
 			return
+
+		self.demarrer_timer_si_necessaire()
 
 		if not self.bombes_generees:
 			self.tableau.generate_bombes(first_click=(i, j))
@@ -74,6 +116,8 @@ class JeuDemineur:
 	def click_droit(self, i, j):
 		if self.game_is_over:
 			return
+
+		self.demarrer_timer_si_necessaire()
 
 		case = self.tableau.tab[i][j]
 		if case.discover:

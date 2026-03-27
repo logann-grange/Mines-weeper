@@ -9,9 +9,9 @@ def calculate_window_size(difficulte):
 	if difficulte == "Facile":
 		return "550x550"
 	elif difficulte == "Moyen":
-		return "650x650"
+		return "550x480"
 	else:  # Difficile
-		return "940x380"
+		return "740x400"
 
 
 def lancer_jeu(menu_frame, difficulte, root):
