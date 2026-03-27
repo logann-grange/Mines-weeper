@@ -1,7 +1,6 @@
 import tkinter as tk
 from JeuDemineur import JeuDemineur
 from choix_difficulté import ChoixDifficulte
-from playsound import playsound
 
 
 def calculate_window_size(difficulte):
@@ -10,7 +9,7 @@ def calculate_window_size(difficulte):
 	if difficulte == "Facile":
 		return "550x550"
 	elif difficulte == "Moyen":
-		return "650x650"
+		return "600x450"
 	else:  # Difficile
 		return "940x380"
 
@@ -29,6 +28,5 @@ if __name__ == "__main__":
 	root.title("Démineur")
 	root.geometry("400x300")
 	root.resizable(False, False)
-	playsound("assets/sons/musique_fond.mp3", block=False)
 	menu = ChoixDifficulte(root, on_difficulte_chosen=lambda d: lancer_jeu(menu, d, root))
 	root.mainloop()

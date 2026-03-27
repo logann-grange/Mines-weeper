@@ -1,6 +1,7 @@
 from affichage_tableau import AffichageTableau
 import menu_retry
-from playsound import playsound
+from pygame import mixer
+
 
 class JeuDemineur:
 	def __init__(self, difficulte, root=None):
@@ -26,7 +27,7 @@ class JeuDemineur:
 	def finir_partie(self, is_win):
 		self.game_is_over = True
 		if not is_win:
-			playsound("assets/sons/boom.wav", block=False)
+			mixer.Sound.play(mixer.Sound("assets/sons/boom.wav"))
 			self.vue.afficher_defaite(self.tableau.tab)
 			self.vue.set_title_state("Perdu")
 			message = "Perdu. Voulez-vous rejouer ?"
@@ -49,7 +50,7 @@ class JeuDemineur:
 		self.retry_overlay = None
 
 	def click_gauche(self, i, j):
-		playsound("assets/sons/left_clic.mp3", block=False) # changerle son (bloc mc ?)
+		mixer.Sound.play(mixer.Sound("assets/sons/left_clic.mp3"))
 		if self.game_is_over:
 			return
 
@@ -84,9 +85,9 @@ class JeuDemineur:
 
 		case.right_clic_on()
 		if case.marker == 1 :
-			playsound("assets/sons/flag.mp3", block=False)
+			mixer.Sound.play(mixer.Sound("assets/sons/flag.mp3"))
 		if case.marker == 2 :
-			playsound("assets/sons/interogation.mp3", block=False)  #a changer
+			mixer.Sound.play(mixer.Sound("assets/sons/interogation.mp3"))
 		self.vue.update_grid(self.tableau.tab)
 
 	def run(self):

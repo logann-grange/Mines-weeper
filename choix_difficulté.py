@@ -1,4 +1,5 @@
 import tkinter as tk
+from pygame import mixer
 
 class ChoixDifficulte(tk.Frame):
     def __init__ (self, master, on_difficulte_chosen=None):
@@ -10,6 +11,7 @@ class ChoixDifficulte(tk.Frame):
         self.master.resizable(False, False)
         self.place(relx=0.5, rely=0.5, anchor="center")
         self.create_widgets()
+        self.play_musique("menu")
     
     def create_widgets(self):
 
@@ -21,27 +23,41 @@ class ChoixDifficulte(tk.Frame):
         self.image = tk.PhotoImage(file="assets/images/logo.png")
         self.canvas.create_image(200, 40, image=self.image, anchor="center")
 
-        self.label = tk.Label(self, text="Choisissez la difficulté")
+        self.label = tk.Label(self, text="Choisissez la difficulté", font=("Arial", 12, "bold"))
         self.label.pack(pady=20)
-
-        self.button_facile = tk.Button(self, text="Facile", command=self.facile)
+        
+        self.button_facile = tk.Button(self, text="Facile", width=15, height=1, background="#68d43e", command=self.facile)
+        #self.button_facile = tk.Button(self, text="Facile", command=self.facile)
         self.button_facile.pack(pady=10)
 
-        self.button_moyen = tk.Button(self, text="Moyen", command=self.moyen)
+        self.button_moyen = tk.Button(self, text="Moyen", width=15, height=1, background="#3e89d4", command=self.moyen)
         self.button_moyen.pack(pady=10)
 
-        self.button_difficile = tk.Button(self, text="Difficile", command=self.difficile)
+        self.button_difficile = tk.Button(self, text="Difficile", width=15, height=1, background="#d4703e", command=self.difficile)
         self.button_difficile.pack(pady=10)
 
     def facile(self):
         if self.on_difficulte_chosen:
             self.on_difficulte_chosen("Facile")
+            mixer.Sound.play(mixer.Sound("assets/sons/bouton.mp3"))
+            self.play_musique("game")
 
     def moyen(self):
         if self.on_difficulte_chosen:
             self.on_difficulte_chosen("Moyen")
+            mixer.Sound.play(mixer.Sound("assets/sons/bouton.mp3"))
+            self.play_musique("game")
 
     def difficile(self):
         if self.on_difficulte_chosen:
-            self.on_difficulte_chosen("Difficile")    
+            self.on_difficulte_chosen("Difficile")
+            mixer.Sound.play(mixer.Sound("assets/sons/bouton.mp3"))
+            self.play_musique("game")
         
+    def play_musique(self, state) :
+        mixer.init()
+        if state == "menu" :
+            mixer.music.load('assets/sons/menu.mp3')
+        elif state == "game" :
+            mixer.music.load('assets/sons/musique_fond.mp3')
+        mixer.music.play(-1)
