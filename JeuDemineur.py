@@ -1,6 +1,8 @@
 from affichage_tableau import AffichageTableau
 import menu_retry
 from choix_difficulté import ChoixDifficulte
+from pygame import mixer
+
 
 class JeuDemineur:
 	def __init__(self, difficulte, root=None):
@@ -59,13 +61,14 @@ class JeuDemineur:
 		self.game_is_over = True
 		temps_final = self.vue.stop_timer() if self.timer_started else 0
 		if not is_win:
+			mixer.Sound.play(mixer.Sound("assets/sons/boom.wav"))
 			self.vue.afficher_defaite(self.tableau.tab)
 			self.vue.set_title_state("Perdu")
 			message = f"Perdu en {temps_final:.2f} s. Voulez-vous rejouer ?"
 		else:
-			self.vue.disable_all_buttons()
 			self.vue.set_title_state("Gagne")
 			message = f"Gagne en {temps_final:.2f} s. Voulez-vous rejouer ?"
+		self.vue.disable_all_buttons()
 		self.retry_overlay = menu_retry.MenuRetry(
 			self.vue.root,
 			on_retry=self.reinitialiser_partie,
@@ -87,9 +90,9 @@ class JeuDemineur:
 			self.timer_started = True
 
 	def click_gauche(self, i, j):
+		mixer.Sound.play(mixer.Sound("assets/sons/left_clic.mp3"))
 		if self.game_is_over:
 			return
-
 		self.demarrer_timer_si_necessaire()
 
 		if not self.bombes_generees:
@@ -124,6 +127,10 @@ class JeuDemineur:
 			return
 
 		case.right_clic_on()
+		if case.marker == 1 :
+			mixer.Sound.play(mixer.Sound("assets/sons/flag.mp3"))
+		if case.marker == 2 :
+			mixer.Sound.play(mixer.Sound("assets/sons/interogation.mp3"))
 		self.vue.update_grid(self.tableau.tab)
 
 	def run(self):

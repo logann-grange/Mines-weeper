@@ -13,7 +13,6 @@ class Case :
         y = self.index[1]
         count = 0
         list_case = self.gener_case_adj(tab)
-        #list_case = [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]]
         for c in  list_case:
             if c.is_bombe :
                 count += 1
@@ -38,7 +37,6 @@ class Case :
             y = self.index[1]
             # definition des cases adjacentes :
             list_case = self.gener_case_adj(tab)
-            #list_case = [tab[x][y+1], tab[x][y-1],tab[x+1][y], tab[x+1][y+1], tab[x+1][y-1], tab[x-1][y], tab[x-1][y+1], tab[x-1][y-1]]
             for c in list_case :
                 if not c.verif_num(tab) and not c.discover :
                     c.discovering(tab)

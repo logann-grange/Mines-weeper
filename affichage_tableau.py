@@ -146,7 +146,6 @@ class AffichageTableau:
             btn_width, btn_height = 5, 2
             self.font_size = 11
             btn_padx, btn_pady = 1, 1
-
         for i, row in enumerate(self.tableau.tab):
             bouton_row = []
             for j, _ in enumerate(row):
