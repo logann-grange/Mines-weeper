@@ -25,9 +25,16 @@ class AffichageTableau:
         self.header_frame = None
         self.timer_label = None
         self._bomb_photo_images = []
-        image_dir = os.path.join(os.path.dirname(__file__), "asset", "image")
+        base_dir = os.path.dirname(__file__)
+        # Priorite au nouveau dossier d'assets, puis compatibilite avec l'ancien.
+        image_dir = os.path.join(base_dir, "assets", "images")
+        legacy_image_dir = os.path.join(base_dir, "asset", "image")
         self.bomb_image_path = os.path.join(image_dir, "bombe_clean.png")
         self.bomb_image_fallback_path = os.path.join(image_dir, "bombe.png")
+        if not os.path.exists(self.bomb_image_path):
+            self.bomb_image_path = os.path.join(legacy_image_dir, "bombe_clean.png")
+        if not os.path.exists(self.bomb_image_fallback_path):
+            self.bomb_image_fallback_path = os.path.join(legacy_image_dir, "bombe.png")
         self._bomb_source_image = None
         self.show_bombs = False
         self.create_header()
