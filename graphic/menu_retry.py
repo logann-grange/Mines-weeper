@@ -1,5 +1,6 @@
 import tkinter as tk
-from choix_difficulté import ChoixDifficulte
+from graphic.choix_difficulté import ChoixDifficulte
+from logic.window_config import calculate_window_size
 
 class MenuRetry:
     def __init__(self, parent, on_retry, on_quit=None, message="Voulez-vous rejouer ?", on_return_to_menu=None):
@@ -51,7 +52,6 @@ class MenuRetry:
             widget.destroy()
         
         from JeuDemineur import JeuDemineur
-        from main import calculate_window_size
         geometry = calculate_window_size(difficulte)
         self.parent.geometry(geometry)
         jeu = JeuDemineur(difficulte, root=self.parent)

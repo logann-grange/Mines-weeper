@@ -1,4 +1,4 @@
-from case import Case
+from logic.case import Case
 import random
 
 class Tableau:

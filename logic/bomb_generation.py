@@ -1,5 +1,5 @@
 import random
-import case
+import logic.case
 
 def generate_bombs(case,dificulty):
     

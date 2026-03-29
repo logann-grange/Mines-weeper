@@ -1,8 +1,8 @@
 import tkinter as tk
 import os
-from generation_tableau import Tableau
+from logic.generation_tableau import Tableau
 from PIL import Image, ImageDraw, ImageTk
-from timer import Timer
+from logic.timer import Timer
 
 
 class AffichageTableau:
@@ -25,7 +25,8 @@ class AffichageTableau:
         self.header_frame = None
         self.timer_label = None
         self._bomb_photo_images = []
-        base_dir = os.path.dirname(__file__)
+        self._bomb_photo_cache = {}
+        base_dir = os.path.dirname(os.path.dirname(__file__))
         # Priorite au nouveau dossier d'assets, puis compatibilite avec l'ancien.
         image_dir = os.path.join(base_dir, "assets", "images")
         legacy_image_dir = os.path.join(base_dir, "asset", "image")
@@ -105,12 +106,16 @@ class AffichageTableau:
         if source is not None:
             target_w = max(8, width - 2)
             target_h = max(8, height - 2)
-            if hasattr(Image, "Resampling"):
-                resample = Image.Resampling.LANCZOS
-            else:
-                resample = Image.LANCZOS
-            resized = source.resize((target_w, target_h), resample)
-            photo = ImageTk.PhotoImage(resized)
+            cache_key = (target_w, target_h)
+            photo = self._bomb_photo_cache.get(cache_key)
+            if photo is None:
+                if hasattr(Image, "Resampling"):
+                    resample = Image.Resampling.LANCZOS
+                else:
+                    resample = Image.LANCZOS
+                resized = source.resize((target_w, target_h), resample)
+                photo = ImageTk.PhotoImage(resized)
+                self._bomb_photo_cache[cache_key] = photo
             canvas.create_image(width // 2, height // 2, image=photo, anchor="center")
             canvas.image_ref = photo
             self._bomb_photo_images.append(photo)

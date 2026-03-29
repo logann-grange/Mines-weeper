@@ -1,17 +1,7 @@
 import tkinter as tk
 from JeuDemineur import JeuDemineur
-from choix_difficulté import ChoixDifficulte
-
-
-def calculate_window_size(difficulte):
-	"""Calcule la taille optimale de la fenêtre selon la difficulté"""
-	# Tailles fixes générales selon la difficulté
-	if difficulte == "Facile":
-		return "550x550"
-	elif difficulte == "Moyen":
-		return "550x480"
-	else:  # Difficile
-		return "740x400"
+from graphic.choix_difficulté import ChoixDifficulte
+from logic.window_config import calculate_window_size
 
 
 def lancer_jeu(menu_frame, difficulte, root):
