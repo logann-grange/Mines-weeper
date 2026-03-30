@@ -25,7 +25,7 @@ class MenuRetry:
         yes_button = tk.Button(button_frame, text="Oui", width=10, command=self.replay)
         yes_button.grid(row=0, column=0, padx=10)
 
-        no_button = tk.Button(button_frame, text="Non", width=10, command=self.quit_game)
+        no_button = tk.Button(button_frame, text="Retour au menu", width=13, command=self.quit_game)
         no_button.grid(row=0, column=1, padx=10)
 
     def replay(self):
@@ -46,7 +46,7 @@ class MenuRetry:
         menu = ChoixDifficulte(self.parent, on_difficulte_chosen=self.retourner_au_jeu)
     
     def retourner_au_jeu(self, difficulte):
-        """Fonction de callback pour rejouer avec une nouvelle difficulté"""
+        #Fonction de callback pour rejouer avec une nouvelle difficulté
         # Détruire le menu de difficulté
         for widget in self.parent.winfo_children():
             widget.destroy()
