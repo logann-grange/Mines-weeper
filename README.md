@@ -58,16 +58,7 @@ git clone <url-du-repo>
 cd Projet_demineur
 ```
 
-### 2) Creer et activer un environnement virtuel (recommande)
-
-Windows (PowerShell):
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-### 3) Installer les dependances
+### 2) Installer les dependances
 
 ```bash
 pip install pillow pygame
